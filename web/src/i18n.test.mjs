@@ -1,0 +1,55 @@
+import assert from 'node:assert/strict'
+import { createTranslator, languageOptions, normalizeLanguage } from './i18n.ts'
+
+assert.equal(normalizeLanguage('it'), 'it')
+assert.equal(normalizeLanguage('zh-TW'), 'zh-TW')
+assert.equal(normalizeLanguage('zh-CN'), 'zh-CN')
+assert.equal(normalizeLanguage('zh'), 'zh-CN')
+assert.equal(normalizeLanguage('zh-Hans'), 'zh-CN')
+assert.equal(normalizeLanguage('zh-hans'), 'zh-CN')
+assert.equal(normalizeLanguage('zh-tw'), 'zh-TW')
+assert.equal(normalizeLanguage('fr'), 'en')
+assert.ok(languageOptions.some((language) => language.code === 'zh-TW'))
+assert.ok(languageOptions.some((language) => language.code === 'zh-CN'))
+
+const en = createTranslator('en')
+const it = createTranslator('it')
+const zhTW = createTranslator('zh-TW')
+const zhCN = createTranslator('zh-CN')
+
+assert.equal(en('sessions.title'), 'Sessions')
+assert.equal(it('sessions.title'), 'Sessioni')
+assert.equal(zhTW('sessions.title'), '工作階段')
+assert.equal(zhCN('sessions.title'), '会话')
+
+assert.equal(en('session.deleteTitle'), 'Delete session?')
+assert.equal(it('session.deleteTitle'), 'Eliminare la sessione?')
+assert.equal(zhTW('session.deleteTitle'), '刪除工作階段？')
+assert.equal(zhCN('session.deleteTitle'), '删除会话？')
+
+// Unknown keys should remain visible during development instead of rendering blank UI.
+assert.equal(en('missing.key'), 'missing.key')
+assert.equal(en('detail.opencode'), '🤖 OpenCode')
+assert.equal(it('detail.changedFilesTitle'), 'File modificati')
+assert.equal(zhTW('detail.changedFilesTitle'), '已變更檔案')
+assert.equal(zhCN('detail.changedFilesTitle'), '已变更文件')
+assert.equal(en('detail.linesAddedDeleted', { additions: 3, deletions: 1 }), '+3 lines · -1 lines')
+assert.equal(it('detail.aheadBehind', { ahead: 1, behind: 2 }), '1 avanti · 2 indietro')
+assert.equal(zhTW('detail.fileStatusSource'), '來自 /file/status')
+assert.equal(zhCN('detail.fileStatusSource'), '来自 /file/status')
+assert.equal(en('detail.fileStatusLabel'), 'Changed files')
+assert.equal(it('detail.fileStatusLabel'), 'File modificati')
+assert.equal(zhTW('detail.fileStatusLabel'), '已變更檔案')
+assert.equal(zhCN('detail.fileStatusLabel'), '已变更文件')
+
+assert.equal(en('settings.theme'), 'Theme')
+assert.equal(it('settings.themeDark'), 'Scuro')
+assert.equal(zhTW('settings.themeSystem'), '跟隨系統')
+assert.equal(zhCN('settings.themeSystem'), '跟随系统')
+assert.equal(en('todo.title'), 'Todo Items')
+assert.equal(zhCN('todo.title'), '待办事项')
+assert.equal(zhCN('nav.settings'), '设置')
+assert.equal(zhCN('connection.offline'), '无法连接到 OpenCode')
+assert.equal(zhCN('settings.save'), '保存配置')
+
+console.log('i18n tests passed')
